@@ -1,0 +1,36 @@
+{
+  \"info\": {
+    \"name\": \"Ecommerce POC API\",
+    \"description\": \"API collection for E-commerce POC with Razorpay Test Mode\",
+    \"schema\": \"https://schema.getpostman.com/json/collection/v2.1.0/collection.json\"
+  },
+  \"item\": [
+    {
+      \"name\": \"Products\",
+      \"item\": [
+        {\"name\": \"Get All Products\", \"request\": {\"method\": \"GET\", \"url\": {\"raw\": \"{{baseUrl}}/api/products\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"products\"]}}},
+        {\"name\": \"Get Product by ID\", \"request\": {\"method\": \"GET\", \"url\": {\"raw\": \"{{baseUrl}}/api/products/:id\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"products\", \":id\"]}}},
+        {\"name\": \"Search Products\", \"request\": {\"method\": \"GET\", \"url\": {\"raw\": \"{{baseUrl}}/api/products/search?q=shirt\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"products\", \"search\"], \"query\": [{\"key\": \"q\", \"value\": \"shirt\"}]}}},
+        {\"name\": \"Get Categories\", \"request\": {\"method\": \"GET\", \"url\": {\"raw\": \"{{baseUrl}}/api/products/categories\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"products\", \"categories\"]}}}
+      ]
+    },
+    {
+      \"name\": \"Checkout & Orders\",
+      \"item\": [
+        {\"name\": \"Checkout\", \"request\": {\"method\": \"POST\", \"header\": [{\"key\": \"Content-Type\", \"value\": \"application/json\"}], \"body\": {\"mode\": \"raw\", \"raw\": \"{\\n  \\\"customerName\\\": \\\"John Doe\\\",\\n  \\\"customerEmail\\\": \\\"john@example.com\\\",\\n  \\\"customerPhone\\\": \\\"1234567890\\\",\\n  \\\"deliveryAddress\\\": \\\"123 Main St, City\\\",\\n  \\\"items\\\": [\\n    {\\\"productId\\\": \\\"<product-uuid>\\\", \\\"quantity\\\": 1}\\n  ]\\n}\"}, \"url\": {\"raw\": \"{{baseUrl}}/api/checkout\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"checkout\"]}}},
+        {\"name\": \"Get Order by ID\", \"request\": {\"method\": \"GET\", \"url\": {\"raw\": \"{{baseUrl}}/api/orders/:orderId\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"orders\", \":orderId\"]}}}
+      ]
+    },
+    {
+      \"name\": \"Payments\",
+      \"item\": [
+        {\"name\": \"Create Razorpay Order\", \"request\": {\"method\": \"POST\", \"header\": [{\"key\": \"Content-Type\", \"value\": \"application/json\"}], \"body\": {\"mode\": \"raw\", \"raw\": \"{\\n  \\\"orderId\\\": \\\"<order-uuid>\\\"\\n}\"}, \"url\": {\"raw\": \"{{baseUrl}}/api/payments/create-order\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"payments\", \"create-order\"]}}},
+        {\"name\": \"Verify Payment\", \"request\": {\"method\": \"POST\", \"header\": [{\"key\": \"Content-Type\", \"value\": \"application/json\"}], \"body\": {\"mode\": \"raw\", \"raw\": \"{\\n  \\\"razorpay_order_id\\\": \\\"order_xxx\\\",\\n  \\\"razorpay_payment_id\\\": \\\"pay_xxx\\\",\\n  \\\"razorpay_signature\\\": \\\"signature_xxx\\\",\\n  \\\"orderId\\\": \\\"<order-uuid>\\\"\\n}\"}, \"url\": {\"raw\": \"{{baseUrl}}/api/payments/verify\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"payments\", \"verify\"]}}},
+        {\"name\": \"Webhook\", \"request\": {\"method\": \"POST\", \"header\": [{\"key\": \"Content-Type\", \"value\": \"application/json\"}, {\"key\": \"x-razorpay-signature\", \"value\": \"<signature>\"}], \"body\": {\"mode\": \"raw\", \"raw\": \"{}\"}, \"url\": {\"raw\": \"{{baseUrl}}/api/payments/webhook\", \"host\": [\"{{baseUrl}}\"], \"path\": [\"api\", \"payments\", \"webhook\"]}}}
+      ]
+    }
+  ],
+  \"variable\": [
+    {\"key\": \"baseUrl\", \"value\": \"http://localhost:5000\"}
+  ]
+}

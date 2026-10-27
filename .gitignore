@@ -1,0 +1,14 @@
+# .gitignore
+node_modules
+dist
+build
+.env
+.DS_Store
+coverage
+*.log
+
+# UCP local test platform (private key + API key, registry)
+backend/.ucp-test-platform/
+backend/ucp-platforms.json
+.ucp-test-platform/
+ucp-platforms.json

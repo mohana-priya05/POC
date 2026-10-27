@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  CREATED
+  ATTEMPTED
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  slug        String      @unique
+  description String
+  pricePaise  Int
+  images      Json
+  stock       Int         @default(0)
+  active      Boolean     @default(true)
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([categoryId])
+  @@index([name])
+}
+
+model Order {
+  id              String           @id @default(uuid())
+  orderNumber     String           @unique
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  deliveryAddress String
+  subtotalPaise   Int
+  totalPaise      Int
+  status          OrderStatus      @default(PENDING)
+  orderItems      OrderItem[]
+  payment         Payment?
+  checkoutSession CheckoutSession?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([orderNumber])
+  @@index([customerEmail])
+}
+
+model OrderItem {
+  id            String   @id @default(uuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id])
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  quantity      Int
+  pricePaise    Int
+  subtotalPaise Int
+  createdAt     DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Payment {
+  id                String        @id @default(uuid())
+  orderId           String        @unique
+  order             Order         @relation(fields: [orderId], references: [id])
+  razorpayOrderId   String?       @unique
+  razorpayPaymentId String?       @unique
+  razorpaySignature String?
+  amountPaise       Int
+  currency          String        @default("INR")
+  status            PaymentStatus @default(CREATED)
+  raw               Json
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([razorpayOrderId])
+}
+
+// ---- UCP (Universal Commerce Protocol) additions: new tables only ----
+
+model CheckoutSession {
+  id              String   @id
+  status          String   @db.VarChar(32)
+  currency        String   @default("INR") @db.VarChar(3)
+  lineItems       Json
+  buyer           Json?
+  platformProfile String?  @db.VarChar(512)
+  orderId         String?  @unique
+  order           Order?   @relation(fields: [orderId], references: [id])
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status, expiresAt])
+}
+
+model IdempotencyRecord {
+  id             String   @id @default(uuid())
+  scope          String   @db.VarChar(255)
+  idemKey        String   @db.VarChar(128)
+  requestHash    String   @db.VarChar(64)
+  state          String   @db.VarChar(16)
+  responseStatus Int?
+  responseBody   Json?
+  createdAt      DateTime @default(now())
+
+  @@unique([scope, idemKey])
+  @@index([createdAt])
+}
