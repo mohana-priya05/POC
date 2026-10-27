@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
+import ChatWidget from '../chat/ChatWidget';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { getItemCount } = useCart();
@@ -31,6 +32,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
         {children}
       </main>
+      <ChatWidget />
     </div>
   );
 };

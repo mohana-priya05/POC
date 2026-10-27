@@ -8,6 +8,7 @@ import orderRoutes from './routes/orderRoutes';
 import paymentRoutes from './routes/paymentRoutes';
 import { createUcpRouter } from './ucp/routes';
 import { discoveryHandler } from './ucp/profile';
+import { createChatRouter } from './chat/routes';
 
 dotenv.config();
 
@@ -49,6 +50,7 @@ app.get('/health', (_req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api', orderRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/chat', createChatRouter());
 
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);

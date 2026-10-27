@@ -12,6 +12,8 @@
     "seed": "ts-node prisma/seed.ts",
     "test": "jest --runInBand",
     "ucp:setup": "ts-node --transpile-only scripts/ucp-setup.ts",
+    "ucp:register-chat": "ts-node --transpile-only scripts/ucp-register-chat.ts",
+    "test:chat": "jest --runInBand tests/chat.test.ts",
     "ucp:call": "ts-node --transpile-only scripts/ucp-call.ts",
     "ucp:demo": "ts-node --transpile-only scripts/ucp-demo.ts",
     "test:ucp": "jest --runInBand tests/ucp.test.ts"
